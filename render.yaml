@@ -1,0 +1,19 @@
+# Render blueprint for the Django API. The Next.js frontend deploys to Vercel
+# (root directory: frontend, env BACKEND_URL=<this service's URL>).
+services:
+  - type: web
+    name: truck-routing-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi:application -c gunicorn.conf.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "*"
