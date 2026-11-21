@@ -1,6 +1,6 @@
 """Weather risk classification and route ranking.
 
-Pure functions with no I/O, so the assessment rules can be unit tested directly.
+Pure functions with no I/O, so the risk rules can be unit tested directly.
 
 Threshold convention: each band's lower bound is inclusive, so a value sitting on
 a shared boundary (e.g. rain of exactly 0.25 in/hr) goes to the higher band.
@@ -159,7 +159,7 @@ def summarize_segments(segments: list[tuple[float, Risk]], duration_s: float) ->
 
 
 def ranking_key(summary: RouteRiskSummary) -> tuple:
-    """Sort key implementing the assessment's preference order.
+    """Sort key implementing the route preference order.
 
     0. Fewest No Travel miles (a route you legally/safely can't drive loses first)
     1. Fewest Severe miles
