@@ -20,7 +20,7 @@ interface Projected {
  *
  * Each pixel cell takes an inverse-distance weighted mean of the samples within
  * `radius`, then is colored by the risk band that mean falls in, so colors
- * change exactly at the assessment's thresholds. Opacity fades out at the
+ * change exactly at the risk thresholds. Opacity fades out at the
  * corridor's edges (low total weight).
  *
  * Performance: samples are projected to screen space and bucketed only when
