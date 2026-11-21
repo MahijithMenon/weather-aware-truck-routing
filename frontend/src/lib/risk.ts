@@ -21,7 +21,7 @@ export function riskColor(level: number): string {
   return RISK_COLORS[Math.max(0, Math.min(4, Math.round(level))) as RiskLevel];
 }
 
-/** Band thresholds from the assessment's risk table (lower bound of Moderate..No Travel). */
+/** Band thresholds from the risk table (lower bound of Moderate..No Travel). */
 export const METRIC_THRESHOLDS: Record<Exclude<HeatMetric, "risk">, number[]> = {
   wind: [25, 35, 45, 55],
   rain: [0.1, 0.25, 0.5, 1.0],
