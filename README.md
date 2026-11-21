@@ -2,7 +2,7 @@
 
 A Next.js + Django app that helps a truck driver pick the safest route. It compares three route options using the
 forecast at each checkpoint for the time the truck will actually be there. Each route is scored with the
-assessment's wind/rain/snow and load rules, and the best one is recommended.
+wind/rain/snow and load-weight risk rules, and the best one is recommended.
 
 ![stack](https://img.shields.io/badge/frontend-Next.js%2015%20%2B%20Leaflet-black) ![stack](https://img.shields.io/badge/backend-Django%205.2-0c4b33)
 
@@ -54,13 +54,13 @@ The rules are in [`backend/routing/services/risk.py`](backend/routing/services/r
 Load rules apply to the wind band: 45–54 mph with more than 30,000 lb is **No Travel**, and 35–44 mph with more
 than 40,000 lb is **Severe**.
 
-### Interpretations (where the spec is ambiguous)
+### Design decisions for edge cases
 
 - **Shared band edges** (e.g. rain 0.25 sits in both 0.10–0.25 and 0.25–0.50): the lower bound is inclusive, so the value goes to the **higher** band, the conservative choice. The No Travel rows for rain and snow say `>`, so exactly 1.00 in/hr rain or 3.0 in/hr snow stays Severe.
 - **Load thresholds** are strict (`> 30,000`, `> 40,000`), as written.
 - **Checkpoint risk** is the worst of wind (after load rules), rain and snow.
 - **Miles per risk level:** each checkpoint covers the road halfway to its neighbours. With 25-mile spacing, each checkpoint counts for the 12.5 mi on either side of it.
-- **Severe miles** include No Travel miles, since No Travel is strictly worse. On top of the four specified criteria, routes with fewer **No Travel** miles rank first, so a slightly shorter route with an impassable stretch never wins. If every route has No Travel conditions, the UI shows a warning.
+- **Severe miles** include No Travel miles, since No Travel is strictly worse. On top of the four core criteria, routes with fewer **No Travel** miles rank first, so a slightly shorter route with an impassable stretch never wins. If every route has No Travel conditions, the UI shows a warning.
 - **Average risk** is distance-weighted on a 0 (Low) to 4 (No Travel) scale.
 - Mileage is rounded to 0.1 mi and average risk to 0.01 when ranking, so floating-point noise between near-identical routes can't decide the result.
 - **Rain** is Open-Meteo `rain + showers` (liquid, inches in the hour). **Snow** is `snowfall` (inches of snow in the hour). **Wind** is sustained 10 m wind; gusts are shown in popups but not scored.
